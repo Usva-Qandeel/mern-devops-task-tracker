@@ -1,22 +1,16 @@
-# Step 1: Build React app
-FROM node:20 AS build   
+#for building stage
+
+FROM node:20 AS build
 WORKDIR /app
+COPY client/package*.json ./ 
+RUN npm install
+COPY client/ .
+RUN npm run build
 
-# Install dependencies
-COPY client/package*.json ./client/
-RUN cd client && npm install
-
-# Copy source code
-COPY client ./client
-
-# Build react app
-RUN cd client && npm run build
-
-# Step 2: Serve with nginx
+#for production stage
+ 
 FROM nginx:alpine
-
-# Copy React build (dist folder) to nginx html folder
-COPY --from=build /app/client/dist /usr/share/nginx/html
-
+COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
+
