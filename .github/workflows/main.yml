@@ -1,29 +1,66 @@
-name: Simple CI
+name: CI Pipeline
 
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  test-build-docker:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      # 1. Testing
-      - name: Run Tests
-        run: echo "🧪 Running tests..." 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-      # 2. Build
-      - name: Build Project
-        run: echo "🏗️ Building project..."
+      - name: Install dependencies
+        run: npm install
 
-      # 3. Build Docker Image
+      - name: Run tests (dummy)
+        run: echo "✅ No tests defined, skipping..."
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install & Build
+        run: |
+          npm install
+          npm run build || echo "No build script defined"
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build Docker Image
-        run: docker build -t mydockerusername/my-app:latest .
+        run: docker build -t myapp:latest .
 
-      # 4. Notify
-      - name: Notify
-        run: echo "✅ All steps completed successfully!"
+  notify:
+    runs-on: ubuntu-latest
+    needs: docker
+
+    steps:
+      - name: Notify Job
+        run: echo "✅ CI Pipeline completed successfully!"
