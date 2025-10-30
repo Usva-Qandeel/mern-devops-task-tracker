@@ -26,17 +26,18 @@ pipeline {
             }
         }
 
-        stage('Docker Build & Push') {
-            steps {
-                withCredentials([string(credentialsId: 'dockerhub-token', variable: 'DOCKERHUB_TOKEN')]) {
-                    bat '''
-                        docker build -t usvaqandeel/mern-devops-task-tracker .
-                        echo %DOCKERHUB_TOKEN% | docker login -u usvaqandeel --password-stdin
-                        docker push usvaqandeel/mern-devops-task-tracker
-                    '''
-                }
-            }
+      stage('Docker Build & Push') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+            bat '''
+                docker build -t usvaqandeel/mern-devops-task-tracker .
+                echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                docker push usvaqandeel/mern-devops-task-tracker
+            '''
         }
+    }
+}
+
 
         stage('Deploy to Railway') {
             steps {
