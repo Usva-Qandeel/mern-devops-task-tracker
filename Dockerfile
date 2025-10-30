@@ -1,26 +1,20 @@
-# Step 1: Use Node base image
-FROM node:18
+# Step 1: Use Node 22 (Vite requires Node 20+)
+FROM node:22-alpine
 
-# Step 2: Set working directory inside container
+# Step 2: Set working directory
 WORKDIR /app
 
-# Step 3: Copy package.json and package-lock.json first
-COPY package*.json ./
+# Step 3: Copy package files
+COPY client/package*.json ./
 
 # Step 4: Install dependencies
 RUN npm install
 
-# Step 5: Copy rest of the project files
-COPY . .
+# Step 5: Copy rest of project
+COPY client ./
 
-# Step 6: Build the React app
-RUN npm run build
+# Step 6: Expose Vite port
+EXPOSE 5173
 
-# Step 7: Install serve (to serve the production build)
-RUN npm install -g serve
-
-# Step 8: Expose port
-EXPOSE 3000
-
-# Step 9: Start the app (serve the build folder)
-CMD ["serve", "-s", "build", "-l", "3000"]
+# Step 7: Run app
+CMD ["npm", "run", "start", "--", "--host"]
