@@ -10,26 +10,26 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                bat 'npm install'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'npm run build --if-present'
+                bat 'npm run build --if-present'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'npm test || echo "No tests configured"'
+                bat 'npm test || echo "No tests configured"'
             }
         }
 
         stage('Docker Build & Push') {
             steps {
                 withCredentials([string(credentialsId: 'dockerhub-token', variable: 'DOCKERHUB_TOKEN')]) {
-                    sh '''
+                    bat '''
                         docker build -t usvaqandeel/mern-devops-task-tracker .
                         echo $DOCKERHUB_TOKEN | docker login -u usvaqandeel --password-stdin
                         docker push usvaqandeel/mern-devops-task-tracker
