@@ -22,7 +22,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                bat 'npm test || echo "No tests configured"'
+                echo 'No tests configured, skipping test stage...'
             }
         }
 
@@ -31,7 +31,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'dockerhub-token', variable: 'DOCKERHUB_TOKEN')]) {
                     bat '''
                         docker build -t usvaqandeel/mern-devops-task-tracker .
-                        echo $DOCKERHUB_TOKEN | docker login -u usvaqandeel --password-stdin
+                        echo %DOCKERHUB_TOKEN% | docker login -u usvaqandeel --password-stdin
                         docker push usvaqandeel/mern-devops-task-tracker
                     '''
                 }
