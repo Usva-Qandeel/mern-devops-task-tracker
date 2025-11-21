@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mern-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mern-app
+  template:
+    metadata:
+      labels:
+        app: mern-app
+    spec:
+      containers:
+        - name: mern-container
+          image: usvaqandeel/mern-devops-task-tracker:latest  
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
