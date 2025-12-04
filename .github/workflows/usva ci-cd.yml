@@ -37,4 +37,6 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
       - name: Push Docker image
-        run: docker push usvaa-app
+        run: |
+          docker tag usvaa-app usvaqandeel/usvaa-app:latest
+          docker push usvaqandeel/usvaa-app:latest
