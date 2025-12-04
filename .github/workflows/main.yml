@@ -28,8 +28,8 @@ jobs:
 
       - name: Push to Docker Hub
         run: |
-          docker tag myapp:latest ${{ secrets.DOCKER_USERNAME }}/myapp:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/myapp:latest
+          docker tag myapp:latest usvaqandeel/myapp:latest
+          docker push usvaqandeel/myapp:latest
 
       - name: Deploy to AWS EC2
         uses: appleboy/ssh-action@v1.0.3
