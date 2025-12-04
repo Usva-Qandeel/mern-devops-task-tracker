@@ -13,10 +13,10 @@ spec:
         app: docker-app
     spec:
       containers:
-      - name:  mern-container
+      - name: mern-container
         image: usvaqandeel/mern-devops-task-tracker:latest  
         ports:
-        - containerPort: 80   
+        - containerPort: 3000   # ✅ CHANGE: 80 → 3000
 ---
 apiVersion: v1
 kind: Service
@@ -29,5 +29,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80          # cluster port
-      targetPort: 80   
+      targetPort: 3000  # ✅ CHANGE: 80 → 3000 (containerPort ke saath match)
       nodePort: 30080   # NodePort
