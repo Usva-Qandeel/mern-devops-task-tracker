@@ -31,14 +31,11 @@ jobs:
           docker tag myapp:latest usvaqandeel/myapp:latest
           docker push usvaqandeel/myapp:latest
 
-      - name: Deploy to AWS EC2
-        uses: appleboy/ssh-action@v1.0.3
+          # ✅ OPTIONAL Railway Deploy
+      - name: Deploy to Railway
+        if: ${{ secrets.RAILWAY_TOKEN != '' }}
+        uses: railwayapp/action@v1
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-          script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/myapp:latest
-            docker stop myapp || true
-            docker rm myapp || true
-            docker run -d -p 3000:3000 --name myapp ${{ secrets.DOCKER_USERNAME }}/myapp:latest
+          token: ${{ secrets.RAILWAY_TOKEN }}
+          environment: production
+          service: myapp
